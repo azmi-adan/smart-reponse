@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Business Automation Simulator</title>
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <h1>📱 WhatsApp Business Automation Simulator</h1>
+                <span class="badge">Demo Version</span>
+            </div>
+            <p class="subtitle">Smart Automation & Workflow AI Internship - Week 3 Assignment</p>
+        </header>
+
+        <!-- Main Simulator Card -->
+        <div class="simulator-card">
+            <div class="card-header">
+                <h2>Simulate Customer Message</h2>
+                <div class="status-indicator">
+                    <span class="dot green"></span>
+                    Automation Active
+                </div>
+            </div>
+
+            <!-- Message Form -->
+            <form id="messageForm" class="message-form" method="POST" action="/simulate">
+                <div class="input-group">
+                    <input type="text" 
+                           name="message" 
+                           id="messageInput"
+                           placeholder="Type customer message here..." 
+                           required
+                           autocomplete="off">
+                    <button type="submit" class="btn-primary">
+                        <span>Send Message</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Quick Test Buttons -->
+            <div class="quick-tests">
+                <p>Quick Test Messages:</p>
+                <div class="test-buttons">
+                    <button class="test-btn" data-message="What is your price?">💰 Price</button>
+                    <button class="test-btn" data-message="Are you open today?">🕒 Hours</button>
+                    <button class="test-btn" data-message="Do you offer delivery?">🚚 Delivery</button>
+                    <button class="test-btn" data-message="Hello">👋 Greeting</button>
+                    <button class="test-btn" data-message="I have a complaint">⚠️ Complaint</button>
+                    <button class="test-btn" data-message="I want to speak to a human">👤 Escalate</button>
+                </div>
+            </div>
+
+            <!-- Live Response Preview -->
+            {% if last_message %}
+            <div class="live-preview">
+                <div class="preview-header">
+                    <h3>Latest Interaction</h3>
+                    <span class="timestamp">{{ inquiries[-1].timestamp if inquiries else '' }}</span>
+                </div>
+                <div class="chat-bubble customer">
+                    <div class="bubble-content">
+                        <span class="label">Customer</span>
+                        <p>{{ last_message }}</p>
+                    </div>
+                </div>
+                <div class="chat-bubble bot">
+                    <div class="bubble-content">
+                        <span class="label">Automated Response</span>
+                        <p>{{ last_response }}</p>
+                        {% if last_category %}
+                        <span class="category-tag">{{ last_category }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Automation Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-details">
+                    <span class="stat-label">Total Inquiries</span>
+                    <span class="stat-value" id="totalInquiries">{{ inquiries|length }}</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⚡</div>
+                <div class="stat-details">
+                    <span class="stat-label">Auto-Response Rate</span>
+                    <span class="stat-value" id="autoRate">
+                        {% set auto_count = inquiries|selectattr('status', 'equalto', 'resolved')|list|length %}
+                        {% if inquiries|length > 0 %}
+                            {{ (auto_count / inquiries|length * 100)|int }}%
+                        {% else %}
+                            0%
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-details">
+                    <span class="stat-label">Categories</span>
+                    <span class="stat-value">{{ inquiries|map(attribute='category')|unique|list|length }}</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⏱️</div>
+                <div class="stat-details">
+                    <span class="stat-label">Avg Response</span>
+                    <span class="stat-value">&lt;1s</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inquiry Log Table -->
+        <div class="log-section">
+            <div class="log-header">
+                <h2>📋 Automation Log</h2>
+                <form method="POST" action="/clear" style="display: inline;">
+                    <button type="submit" class="btn-secondary" {% if not inquiries %}disabled{% endif %}>
+                        Clear Log
+                    </button>
+                </form>
+            </div>
+
+            {% if inquiries %}
+            <div class="table-container">
+                <table class="inquiry-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Message</th>
+                            <th>Category</th>
+                            <th>Auto Response</th>
+                            <th>Confidence</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for inquiry in inquiries|reverse %}
+                        <tr>
+                            <td>{{ inquiry.timestamp }}</td>
+                            <td class="message-cell">"{{ inquiry.message }}"</td>
+                            <td>
+                                <span class="category-badge category-{{ inquiry.category }}">
+                                    {{ inquiry.category|title }}
+                                </span>
+                            </td>
+                            <td class="response-cell">{{ inquiry.response }}</td>
+                            <td>
+                                <div class="confidence-bar">
+                                  <div class="confidence-bar">
+  <div class="confidence-fill" id="confidenceFill"></div>
+</div>
+                                        {{ (inquiry.confidence * 100)|int }}%
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="status-badge status-{{ inquiry.status }}">
+                                    {{ inquiry.status|title }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">📭</div>
+                <h3>No inquiries yet</h3>
+                <p>Send a test message above to see automation in action</p>
+                <div class="empty-suggestions">
+                    <span>Try: "What's your price?"</span>
+                    <span>Try: "Are you open?"</span>
+                    <span>Try: "Delivery options"</span>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Assignment Documentation Helper -->
+        <div class="doc-section">
+            <details>
+                <summary>📝 View Issue Log Template (for your assignment)</summary>
+                <div class="issue-log-template">
+                    <table class="issue-table">
+                        <thead>
+                            <tr>
+                                <th>Issue ID</th>
+                                <th>Description</th>
+                                <th>Cause</th>
+                                <th>Fix Applied</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#001</td>
+                                <td>"How much" not categorized as pricing</td>
+                                <td>Pattern only matched "price"</td>
+                                <td>Added "how much" and "cost" to pricing patterns</td>
+                                <td><span class="fixed">✅ Fixed</span></td>
+                            </tr>
+                            <tr>
+                                <td>#002</td>
+                                <td>No timestamps in log</td>
+                                <td>Missing datetime in inquiry record</td>
+                                <td>Added datetime.now() to logging</td>
+                                <td><span class="fixed">✅ Fixed</span></td>
+                            </tr>
+                            <tr>
+                                <td>#003</td>
+                                <td>Form resets on submission</td>
+                                <td>Page refresh clearing data</td>
+                                <td>Added AJAX endpoint and live updates</td>
+                                <td><span class="fixed">✅ Fixed</span></td>
+                            </tr>
+                            <tr>
+                                <td>#004</td>
+                                <td>Greetings misclassified as general</td>
+                                <td>No greeting detection rule</td>
+                                <td>Added greeting patterns with welcome response</td>
+                                <td><span class="fixed">✅ Fixed</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </details>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
