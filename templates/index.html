@@ -4,27 +4,140 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WhatsApp Business Automation Simulator</title>
-<link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/styles.css">
+    <!-- Add Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <div class="logo">
-                <h1>📱 WhatsApp Business Automation Simulator</h1>
-                <span class="badge">Demo Version</span>
+    <!-- Splash Screen -->
+    <div class="splash-screen" id="splashScreen">
+        <div class="splash-content">
+            <div class="splash-logo">
+                <i class="fas fa-comments"></i>
             </div>
-            <p class="subtitle">Smart Automation & Workflow AI Internship - Week 3 Assignment</p>
-        </header>
+            <h1 class="splash-title">WhatsApp Business Automation</h1>
+            <p class="splash-subtitle">Smart Automation & Workflow AI Internship</p>
+            <div class="splash-progress">
+                <div class="progress-bar" id="splashProgress"></div>
+            </div>
+            <p class="splash-version">Version 2.0 | Week 3 Assignment</p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-whatsapp"></i>
+                <span>WABA Simulator</span>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#simulator" class="nav-link">Simulator</a>
+                <a href="#stats" class="nav-link">Analytics</a>
+                <a href="#docs" class="nav-link">Documentation</a>
+            </div>
+            <div class="nav-toggle" id="navToggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Hero Section (Home Page) -->
+        <section id="home" class="hero-section">
+            <div class="hero-content">
+                <div class="hero-badge">🚀 AI-Powered Automation</div>
+                <h1 class="hero-title">Intelligent <span class="gradient-text">WhatsApp Business</span> Automation</h1>
+                <p class="hero-subtitle">Experience the future of customer service with our smart automation simulator. Handle inquiries 24/7 with AI-powered responses.</p>
+                
+                <div class="hero-stats">
+                    <div class="hero-stat-item">
+                        <div class="stat-number">99.9%</div>
+                        <div class="stat-label">Uptime</div>
+                    </div>
+                    <div class="hero-stat-item">
+                        <div class="stat-number">&lt;1s</div>
+                        <div class="stat-label">Response Time</div>
+                    </div>
+                    <div class="hero-stat-item">
+                        <div class="stat-number">10+</div>
+                        <div class="stat-label">Categories</div>
+                    </div>
+                </div>
+
+                <div class="hero-cta">
+                    <a href="#simulator" class="btn-primary btn-large">
+                        <i class="fas fa-play"></i>
+                        Try Simulator
+                    </a>
+                    <a href="#features" class="btn-secondary btn-large">
+                        <i class="fas fa-info-circle"></i>
+                        Learn More
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="floating-card card-1">
+                    <i class="fas fa-robot"></i>
+                    <span>AI Response</span>
+                </div>
+                <div class="floating-card card-2">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Analytics</span>
+                </div>
+                <div class="floating-card card-3">
+                    <i class="fas fa-clock"></i>
+                    <span>24/7</span>
+                </div>
+                <div class="hero-illustration">
+                    <i class="fas fa-comment-dots"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="features-section">
+            <h2 class="section-title">Powerful <span class="gradient-text">Features</span></h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Instant Response</h3>
+                    <p>Automated replies in milliseconds with intelligent message categorization</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Smart Learning</h3>
+                    <p>AI-powered system that improves responses based on interaction patterns</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h3>Analytics Dashboard</h3>
+                    <p>Real-time insights into customer inquiries and automation performance</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Reliable & Secure</h3>
+                    <p>Enterprise-grade security with 99.9% uptime guarantee</p>
+                </div>
+            </div>
+        </section>
 
         <!-- Main Simulator Card -->
-        <div class="simulator-card">
+        <section id="simulator" class="simulator-card">
             <div class="card-header">
-                <h2>Simulate Customer Message</h2>
+                <h2><i class="fas fa-sim-card"></i> Simulate Customer Message</h2>
                 <div class="status-indicator">
                     <span class="dot green"></span>
-                    Automation Active
+                    <span class="status-text">Automation Active</span>
                 </div>
             </div>
 
@@ -39,9 +152,7 @@
                            autocomplete="off">
                     <button type="submit" class="btn-primary">
                         <span>Send Message</span>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke-width="2" stroke-linecap="round"/>
-                        </svg>
+                        <i class="fas fa-paper-plane"></i>
                     </button>
                 </div>
             </form>
@@ -50,12 +161,24 @@
             <div class="quick-tests">
                 <p>Quick Test Messages:</p>
                 <div class="test-buttons">
-                    <button class="test-btn" data-message="What is your price?">💰 Price</button>
-                    <button class="test-btn" data-message="Are you open today?">🕒 Hours</button>
-                    <button class="test-btn" data-message="Do you offer delivery?">🚚 Delivery</button>
-                    <button class="test-btn" data-message="Hello">👋 Greeting</button>
-                    <button class="test-btn" data-message="I have a complaint">⚠️ Complaint</button>
-                    <button class="test-btn" data-message="I want to speak to a human">👤 Escalate</button>
+                    <button class="test-btn" data-message="What is your price?">
+                        <i class="fas fa-tag"></i> Price
+                    </button>
+                    <button class="test-btn" data-message="Are you open today?">
+                        <i class="fas fa-clock"></i> Hours
+                    </button>
+                    <button class="test-btn" data-message="Do you offer delivery?">
+                        <i class="fas fa-truck"></i> Delivery
+                    </button>
+                    <button class="test-btn" data-message="Hello">
+                        <i class="fas fa-hand-wave"></i> Greeting
+                    </button>
+                    <button class="test-btn" data-message="I have a complaint">
+                        <i class="fas fa-exclamation-triangle"></i> Complaint
+                    </button>
+                    <button class="test-btn" data-message="I want to speak to a human">
+                        <i class="fas fa-user"></i> Escalate
+                    </button>
                 </div>
             </div>
 
@@ -63,7 +186,7 @@
             {% if last_message %}
             <div class="live-preview">
                 <div class="preview-header">
-                    <h3>Latest Interaction</h3>
+                    <h3><i class="fas fa-comment-dots"></i> Latest Interaction</h3>
                     <span class="timestamp">{{ inquiries[-1].timestamp if inquiries else '' }}</span>
                 </div>
                 <div class="chat-bubble customer">
@@ -83,19 +206,23 @@
                 </div>
             </div>
             {% endif %}
-        </div>
+        </section>
 
         <!-- Automation Stats -->
-        <div class="stats-grid">
+        <section id="stats" class="stats-grid">
             <div class="stat-card">
-                <div class="stat-icon">📊</div>
+                <div class="stat-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
                 <div class="stat-details">
                     <span class="stat-label">Total Inquiries</span>
                     <span class="stat-value" id="totalInquiries">{{ inquiries|length }}</span>
                 </div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon">⚡</div>
+                <div class="stat-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
                 <div class="stat-details">
                     <span class="stat-label">Auto-Response Rate</span>
                     <span class="stat-value" id="autoRate">
@@ -109,28 +236,32 @@
                 </div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon">🎯</div>
+                <div class="stat-icon">
+                    <i class="fas fa-tags"></i>
+                </div>
                 <div class="stat-details">
                     <span class="stat-label">Categories</span>
                     <span class="stat-value">{{ inquiries|map(attribute='category')|unique|list|length }}</span>
                 </div>
             </div>
             <div class="stat-card">
-                <div class="stat-icon">⏱️</div>
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
                 <div class="stat-details">
                     <span class="stat-label">Avg Response</span>
                     <span class="stat-value">&lt;1s</span>
                 </div>
             </div>
-        </div>
+        </section>
 
         <!-- Inquiry Log Table -->
-        <div class="log-section">
+        <section class="log-section">
             <div class="log-header">
-                <h2>📋 Automation Log</h2>
+                <h2><i class="fas fa-history"></i> Automation Log</h2>
                 <form method="POST" action="/clear" style="display: inline;">
                     <button type="submit" class="btn-secondary" {% if not inquiries %}disabled{% endif %}>
-                        Clear Log
+                        <i class="fas fa-trash"></i> Clear Log
                     </button>
                 </form>
             </div>
@@ -161,11 +292,8 @@
                             <td class="response-cell">{{ inquiry.response }}</td>
                             <td>
                                 <div class="confidence-bar">
-                                  <div class="confidence-bar">
-  <div class="confidence-fill" id="confidenceFill"></div>
-</div>
-                                        {{ (inquiry.confidence * 100)|int }}%
-                                    </div>
+                                    <div class="confidence-fill" style="width: 75%; background-color: #4caf50; height: 20px;"></div>
+                                    <span class="confidence-text">{{ (inquiry.confidence * 100)|int }}%</span>
                                 </div>
                             </td>
                             <td>
@@ -180,7 +308,9 @@
             </div>
             {% else %}
             <div class="empty-state">
-                <div class="empty-icon">📭</div>
+                <div class="empty-icon">
+                    <i class="fas fa-inbox"></i>
+                </div>
                 <h3>No inquiries yet</h3>
                 <p>Send a test message above to see automation in action</p>
                 <div class="empty-suggestions">
@@ -190,12 +320,15 @@
                 </div>
             </div>
             {% endif %}
-        </div>
+        </section>
 
         <!-- Assignment Documentation Helper -->
-        <div class="doc-section">
+        <section id="docs" class="doc-section">
             <details>
-                <summary>📝 View Issue Log Template (for your assignment)</summary>
+                <summary>
+                    <i class="fas fa-clipboard-list"></i>
+                    View Issue Log Template (for your assignment)
+                </summary>
                 <div class="issue-log-template">
                     <table class="issue-table">
                         <thead>
@@ -209,39 +342,72 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>#001</td>
+                                <td><span class="issue-id">#001</span></td>
                                 <td>"How much" not categorized as pricing</td>
                                 <td>Pattern only matched "price"</td>
                                 <td>Added "how much" and "cost" to pricing patterns</td>
-                                <td><span class="fixed">✅ Fixed</span></td>
+                                <td><span class="fixed"><i class="fas fa-check-circle"></i> Fixed</span></td>
                             </tr>
                             <tr>
-                                <td>#002</td>
+                                <td><span class="issue-id">#002</span></td>
                                 <td>No timestamps in log</td>
                                 <td>Missing datetime in inquiry record</td>
                                 <td>Added datetime.now() to logging</td>
-                                <td><span class="fixed">✅ Fixed</span></td>
+                                <td><span class="fixed"><i class="fas fa-check-circle"></i> Fixed</span></td>
                             </tr>
                             <tr>
-                                <td>#003</td>
+                                <td><span class="issue-id">#003</span></td>
                                 <td>Form resets on submission</td>
                                 <td>Page refresh clearing data</td>
                                 <td>Added AJAX endpoint and live updates</td>
-                                <td><span class="fixed">✅ Fixed</span></td>
+                                <td><span class="fixed"><i class="fas fa-check-circle"></i> Fixed</span></td>
                             </tr>
                             <tr>
-                                <td>#004</td>
+                                <td><span class="issue-id">#004</span></td>
                                 <td>Greetings misclassified as general</td>
                                 <td>No greeting detection rule</td>
                                 <td>Added greeting patterns with welcome response</td>
-                                <td><span class="fixed">✅ Fixed</span></td>
+                                <td><span class="fixed"><i class="fas fa-check-circle"></i> Fixed</span></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </details>
-        </div>
+        </section>
     </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-whatsapp"></i>
+                    <span>WABA Simulator</span>
+                </div>
+                <p>Smart Automation & Workflow AI Internship - Week 3 Assignment</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#simulator">Simulator</a></li>
+                    <li><a href="#stats">Analytics</a></li>
+                    <li><a href="#docs">Documentation</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Technologies</h4>
+                <ul>
+                    <li><i class="fab fa-python"></i> Python/Flask</li>
+                    <li><i class="fab fa-js"></i> JavaScript</li>
+                    <li><i class="fab fa-css3-alt"></i> CSS3</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 WhatsApp Business Automation Simulator. All rights reserved.</p>
+        </div>
+    </footer>
 
     <script src="/static/script.js"></script>
 </body>

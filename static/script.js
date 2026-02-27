@@ -1,21 +1,78 @@
 // Wait for DOM to load
 document.addEventListener('DOMContentLoaded', function() {
+    // Hide splash screen after animation
+    setTimeout(() => {
+        const splash = document.getElementById('splashScreen');
+        if (splash) {
+            splash.style.display = 'none';
+        }
+    }, 3000);
     
-    // Initialize tooltips and animations
+    // Initialize all features
+    initNavigation();
     initTooltips();
-    
-    // Set up quick test buttons
     setupQuickTests();
-    
-    // Set up AJAX form submission
     setupAjaxForm();
-    
-    // Set up auto-refresh for stats
     setupStatsRefresh();
-    
-    // Add animation to new rows
     observeNewRows();
+    initSmoothScroll();
 });
+
+// Navigation toggle for mobile
+function initNavigation() {
+    const navToggle = document.getElementById('navToggle');
+    const navMenu = document.getElementById('navMenu');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    if (navToggle) {
+        navToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+    }
+
+    // Close menu when clicking a link
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('href');
+            const targetSection = document.querySelector(targetId);
+            
+            if (targetSection) {
+                targetSection.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            // Update active link
+            navLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+            
+            // Close mobile menu
+            if (navMenu) {
+                navMenu.classList.remove('active');
+            }
+        });
+    });
+
+    // Highlight active section on scroll
+    window.addEventListener('scroll', () => {
+        const sections = document.querySelectorAll('section');
+        let current = '';
+        
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if (pageYOffset >= sectionTop - 200) {
+                current = '#' + section.getAttribute('id');
+            }
+        });
+        
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === current) {
+                link.classList.add('active');
+            }
+        });
+    });
+}
 
 // Quick test buttons functionality
 function setupQuickTests() {
@@ -27,7 +84,7 @@ function setupQuickTests() {
             const message = this.getAttribute('data-message');
             messageInput.value = message;
             
-            // Optional: auto-submit after quick test
+            // Auto-submit after quick test
             if (confirm(`Send test message: "${message}"?`)) {
                 document.getElementById('messageForm').submit();
             }
@@ -38,6 +95,7 @@ function setupQuickTests() {
 // AJAX form submission for smoother experience
 function setupAjaxForm() {
     const form = document.getElementById('messageForm');
+    if (!form) return;
     
     form.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -48,7 +106,7 @@ function setupAjaxForm() {
         // Show loading state
         const submitBtn = form.querySelector('button[type="submit"]');
         const originalText = submitBtn.innerHTML;
-        submitBtn.innerHTML = 'Sending...';
+        submitBtn.classList.add('loading');
         submitBtn.disabled = true;
         
         // Send AJAX request
@@ -62,13 +120,10 @@ function setupAjaxForm() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Show success message
                 showNotification('✅ Message processed successfully!', 'success');
-                
-                // Clear input
                 document.getElementById('messageInput').value = '';
                 
-                // Reload page to show new data (simplest approach)
+                // Reload page to show new data
                 setTimeout(() => {
                     location.reload();
                 }, 1000);
@@ -81,7 +136,7 @@ function setupAjaxForm() {
             console.error('Error:', error);
         })
         .finally(() => {
-            // Reset button
+            submitBtn.classList.remove('loading');
             submitBtn.innerHTML = originalText;
             submitBtn.disabled = false;
         });
@@ -90,52 +145,25 @@ function setupAjaxForm() {
 
 // Show notification
 function showNotification(message, type) {
-    // Remove existing notification
     const existingNotif = document.querySelector('.notification');
     if (existingNotif) {
         existingNotif.remove();
     }
     
-    // Create notification
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
-    notification.textContent = message;
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 15px 25px;
-        background: ${type === 'success' ? '#10b981' : '#ef4444'};
-        color: white;
-        border-radius: 10px;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-        z-index: 1000;
-        animation: slideIn 0.3s ease;
-    `;
-    
+    notification.innerHTML = message;
     document.body.appendChild(notification);
     
-    // Remove after 3 seconds
     setTimeout(() => {
         notification.style.animation = 'slideOut 0.3s ease';
         setTimeout(() => notification.remove(), 300);
     }, 3000);
 }
 
-// Add CSS animations
+// Add CSS animations dynamically
 const style = document.createElement('style');
 style.textContent = `
-    @keyframes slideIn {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-    
     @keyframes slideOut {
         from {
             transform: translateX(0);
@@ -146,15 +174,6 @@ style.textContent = `
             opacity: 0;
         }
     }
-    
-    .highlight-row {
-        animation: highlight 2s ease;
-    }
-    
-    @keyframes highlight {
-        0% { background-color: #fef3c7; }
-        100% { background-color: transparent; }
-    }
 `;
 document.head.appendChild(style);
 
@@ -163,7 +182,6 @@ function observeNewRows() {
     const table = document.querySelector('tbody');
     if (!table) return;
     
-    // Highlight last row
     const lastRow = table.lastElementChild;
     if (lastRow) {
         lastRow.classList.add('highlight-row');
@@ -172,7 +190,6 @@ function observeNewRows() {
 
 // Refresh stats periodically
 function setupStatsRefresh() {
-    // Update stats every 30 seconds
     setInterval(() => {
         fetch('/stats')
             .then(response => response.json())
@@ -180,7 +197,6 @@ function setupStatsRefresh() {
                 if (data.total !== undefined) {
                     document.getElementById('totalInquiries').textContent = data.total;
                     
-                    // Update auto-rate
                     const resolvedCount = data.categories ? 
                         Object.values(data.categories).reduce((a, b) => a + b, 0) : 0;
                     const autoRate = data.total > 0 ? 
@@ -232,6 +248,22 @@ function hideTooltip(e) {
     }
 }
 
+// Initialize smooth scroll
+function initSmoothScroll() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+}
+
 // Export data for assignment
 function exportData() {
     const data = {
@@ -247,8 +279,40 @@ function exportData() {
     
     console.log('Export Data:', data);
     return data;
-    
 }
 
 // Make export available globally
 window.exportData = exportData;
+
+// Add parallax effect to hero section
+window.addEventListener('scroll', () => {
+    const hero = document.querySelector('.hero-section');
+    const scrolled = window.pageYOffset;
+    
+    if (hero) {
+        const heroImage = document.querySelector('.hero-illustration');
+        if (heroImage) {
+            heroImage.style.transform = `translate(-50%, -50%) translateY(${scrolled * 0.5}px)`;
+        }
+    }
+});
+
+// Add typing effect to hero title (optional)
+const heroTitle = document.querySelector('.hero-title');
+if (heroTitle && !sessionStorage.getItem('titleAnimated')) {
+    const text = heroTitle.innerText;
+    heroTitle.innerText = '';
+    
+    let i = 0;
+    function typeWriter() {
+        if (i < text.length) {
+            heroTitle.innerHTML += text.charAt(i);
+            i++;
+            setTimeout(typeWriter, 50);
+        }
+    }
+    
+    // Only run animation on first visit
+    setTimeout(typeWriter, 3000);
+    sessionStorage.setItem('titleAnimated', 'true');
+}
